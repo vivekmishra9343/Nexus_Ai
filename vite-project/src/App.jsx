@@ -1,18 +1,16 @@
 import React from "react";
-import Navbar from "./components/home/Navbar";
-import HeroSection from "./components/home/Herosection";
-import CircleImage from "./components/home/CircleImage";
-import CallToAction from "./components/home/CallToAction";
-import BackgroundElements from "./components/home/BackgroundElements";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import CandidateDashboard from "./pages/CandidateDashboard"; // Import your Candidate Dashboard component
 
 const App = () => {
   return (
-    <div className='Home2  w-full h-[1024px] relative bg-[#fbfaf4]'>
-      <BackgroundElements />
-      <CircleImage />
-      <Navbar />
-      <HeroSection />
-      <CallToAction />
+    <div>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/dashboard' element={<CandidateDashboard />} />{" "}
+        {/* Route for Candidate Dashboard */}
+      </Routes>
     </div>
   );
 };
