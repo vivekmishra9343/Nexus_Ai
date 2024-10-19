@@ -3,8 +3,8 @@ const User = require("../models/User"); // Assuming you have a User model
 // Update user details
 exports.updateUserDetails = async (req, res) => {
   try {
-    const { id } = req.params; // Assuming the user ID is passed as a URL parameter
-    const { firstName, lastName, email, mobileNo, gender, address } = req.body;
+    const { id, firstName, lastName, email, mobileNo, gender, address } =
+      req.body; // Get ID from body
 
     // Find the user by ID and update
     const updatedUser = await User.findByIdAndUpdate(
@@ -37,7 +37,3 @@ exports.updateUserDetails = async (req, res) => {
     });
   }
 };
-
-// Handle password hashing (only if password is being updated)
-// If you want to handle password securely, make sure to hash it before updating it.
-// You can use libraries like bcryptjs for this purpose.

@@ -1,16 +1,27 @@
 const express = require("express");
-const router = express.Router();
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" }); // Temporary storage
-const resumeController = require("./resumeController");
-const authMiddleware = require("./authMiddleware"); // Your authentication middleware
+const {
+  uploadResume,
+  applyForJob,
+} = require("../controllers/candidateController"); // Adjust the path as necessary
 
-router.post(
-  "/upload-resume",
-  authMiddleware,
-  upload.single("resume"),
-  resumeController.uploadResume
-);
-router.post("/apply-job", authMiddleware, resumeController.applyForJob);
+const router = express.Router();
+
+// Set up Multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Directory to store uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`); // Rename file to avoid conflicts
+  },
+});
+const upload = multer({ storage });
+
+// Route for uploading a resume
+router.post("/upload-resume", upload.single("resume"), uploadResume); // Use "resume" as the field name in the form
+
+// Route for applying for a job
+router.post("/apply-job", applyForJob);
 
 module.exports = router;
