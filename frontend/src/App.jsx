@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import HRDashboard from "./pages/HRDashboard";
 import JobDescription from "./pages/JobDescription";
 import JobListing from "./pages/JobDescription";
+import Profile from "./pages/Profile";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/SignUp' element={<SignUp />} />
         <Route path='/Job-listing' element={<JobListing />}></Route>
+        <Route path='/profile' element={<Profile />}></Route>
         {/* Route for Candidate Dashboard */}
       </Routes>
     </div>
