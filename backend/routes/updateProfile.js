@@ -1,9 +1,9 @@
 const express = require("express");
-const router = express.Router();
-const { updateUserDetails } = require("../controllers/userController"); // Import the controller function
+const { updateUserDetails } = require("../controllers/userController");
 
-// Route to update user details
-// Example: PUT /api/users/:id
-router.put("/users/:id", updateUserDetails);
+const router = express.Router();
+
+// Update user details route
+router.put("/user/update", updateUserDetails); // Using PUT method for updates
 
 module.exports = router;

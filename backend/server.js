@@ -1,48 +1,42 @@
 const express = require("express");
 const app = express();
 
-// const userRoutes = require("./routes/User");
+// Importing routes
+const candidateRoutes = require("./routes/candidateDashboard"); // Candidate-related routes
+const hrRoutes = require("./routes/hrDashboard"); // HR dashboard related routes
+const interviewRoutes = require("./routes/interview"); // Interview-related routes
+const jobDescriptionRoutes = require("./routes/jobDescription"); // Job description related routes
+const profileRoutes = require("./routes/Profile"); // Profile-related routes
+const updateProfileRoutes = require("./routes/updateProfile"); // Update profile routes
 
 const database = require("./config/database");
-// const cookieParser = require("cookie-parser");
 const cors = require("cors");
-// const { cloudinaryConnect } = require("./config/cloudinary");
-// const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
-//database connect
+// Database connection
 database.connect();
-//middlewares
+
+// Middleware
 app.use(express.json());
-// app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:4000",
+    origin: "http://localhost:4000", // Adjust this as necessary
     credentials: true,
   })
 );
 
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//     tempFileDir: "/tmp",
-//   })
-// );
-//cloudinary connection
-// cloudinaryConnect();
+// Routes
+app.use("/api/v1/candidates", candidateRoutes); // Candidate routes
+app.use("/api/v1/hr", hrRoutes); // HR dashboard routes
+app.use("/api/v1/interview", interviewRoutes); // Interview routes
+app.use("/api/v1/jobs", jobDescriptionRoutes); // Job description routes
+app.use("/api/v1/profile", profileRoutes); // Profile routes
+app.use("/api/v1/updateProfile", updateProfileRoutes); // Update profile routes
 
-//routes
-// app.use("/api/v1/auth", userRoutes);
-// app.use("/api/v1/profile", profileRoutes);
-// app.use("/api/v1/course", courseRoutes);
-// app.use("/api/v1/payment", paymentRoutes);
-// app.use("/api/v1/reach", contactUsRoute);
-
-//def route
-
+// Default route
 app.get("/", (req, res) => {
   return res.json({
     success: true,
@@ -50,6 +44,7 @@ app.get("/", (req, res) => {
   });
 });
 
+// Start the server
 app.listen(PORT, () => {
-  console.log(`App is running at ${PORT}`);
+  console.log(`App is running at http://localhost:${PORT}`);
 });
