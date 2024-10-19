@@ -1,29 +1,36 @@
 // controllers/auth.js
-const bcrypt = require("bcryptjs");
+
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
 
-// Signup Controller
 exports.signup = async (req, res) => {
-  const { username, email, password } = req.body;
-
-  // Validate required fields
-  if (!username || !email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required.",
-    });
-  }
+  console.log("Signup request received:", req.body);
+  const { username, email, password, confirmPassword } = req.body;
 
   try {
+    // Validate required fields
+    if (!username || !email || !password || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match.",
+      });
+    }
+
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User with this email already exists.",
+        message: "User with this email or username already exists.",
       });
     }
 
@@ -37,6 +44,8 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
     });
 
+    console.log("New user created:", newUser);
+
     // Respond with success message
     res.status(201).json({
       success: true,
@@ -45,7 +54,6 @@ exports.signup = async (req, res) => {
         id: newUser._id,
         username: newUser.username,
         email: newUser.email,
-        // Include any other fields you want to send back
       },
     });
   } catch (error) {
@@ -63,17 +71,24 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log("Login attempt for username:", username); // Add this log
 
     // Find the user by username
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.log("User not found"); // Add this log
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.log("Password does not match"); // Add this log
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     // Create JWT token
@@ -83,20 +98,15 @@ exports.login = async (req, res) => {
 
     // Set the token and user details in an HttpOnly cookie
     res.cookie("token", token, {
-      httpOnly: true, // Prevents JavaScript access to the token
-      secure: process.env.NODE_ENV === "production", // Use secure flag in production
-      sameSite: "strict", // Helps prevent CSRF attacks
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days
-    });
-
-    // Optionally, you can set user details in another cookie (non-HttpOnly)
-    res.cookie("userId", user._id, {
-      httpOnly: false, // Allow access to this cookie via JavaScript if needed
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     // Send response with user details
     res.status(200).json({
+      success: true,
       message: "Login successful",
       userId: user._id,
       username: user.username,
@@ -104,7 +114,10 @@ exports.login = async (req, res) => {
       isHR: user.isHR,
     });
   } catch (error) {
-    res.status(500).json({ message: "Login error", error: error.message });
+    console.error("Login error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Login error", error: error.message });
   }
 };
 
