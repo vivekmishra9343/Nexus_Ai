@@ -5,7 +5,7 @@ const {
   getInterviewStatus,
   endInterview,
   uploadVideoChunk,
-} = require("../controllers/interviewController"); // Adjust the path as necessary
+} = require("../controllers/aiInterview"); // Adjust the path as necessary
 
 const router = express.Router();
 

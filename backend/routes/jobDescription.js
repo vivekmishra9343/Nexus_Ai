@@ -1,9 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const {
-  uploadResume,
-  applyForJob,
-} = require("../controllers/candidateController"); // Adjust the path as necessary
+const { uploadResume, applyForJob } = require("../controllers/jobDescription"); // Adjust the path as necessary
 
 const router = express.Router();
 

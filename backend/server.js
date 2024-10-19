@@ -23,14 +23,14 @@ database.connect();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:4000", // Adjust this as necessary
+    origin: "http://localhost:3000", // Adjust this as necessary
     credentials: true,
   })
 );
 
 // Routes
 app.use("/api/v1/candidates", candidateRoutes); // Candidate routes
-app.use("/api/v1/hr", hrRoutes); // HR dashboard routes
+app.use("/api/v1/HR", hrRoutes); // HR dashboard routes
 app.use("/api/v1/interview", interviewRoutes); // Interview routes
 app.use("/api/v1/jobs", jobDescriptionRoutes); // Job description routes
 app.use("/api/v1/profile", profileRoutes); // Profile routes
@@ -42,6 +42,12 @@ app.get("/", (req, res) => {
     success: true,
     message: "Your server is up and running....",
   });
+});
+
+// Global error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong!" });
 });
 
 // Start the server

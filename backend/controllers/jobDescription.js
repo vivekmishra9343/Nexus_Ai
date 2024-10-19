@@ -1,5 +1,6 @@
 const cloudinary = require("cloudinary").v2;
-const { Candidate, Job } = require("../models");
+const Job = require("../models/Job");
+const Candidate = require("../models/Candidate");
 
 // Configure Cloudinary
 cloudinary.config({
