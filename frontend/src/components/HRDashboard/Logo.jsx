@@ -1,7 +1,12 @@
+import { Link } from "react-router-dom";
+import logo from "../../assets/images/logo.png";
+
 const Logo = () => (
   <div className='flex items-center p-4'>
-    <div className='w-10 h-10 bg-black rounded-full'></div>
-    <span className='ml-2 text-xl font-bold'>MATAVERSE</span>
+    <Link to='/'>
+      <img src={logo} alt='NexusAi Logo' className='h-8 w-8' />
+    </Link>
   </div>
 );
+
 export default Logo;

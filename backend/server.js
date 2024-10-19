@@ -1,26 +1,55 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-require("dotenv").config();
-
 const app = express();
 
-// Middleware
-app.use(cors());
+// const userRoutes = require("./routes/User");
+
+const database = require("./config/database");
+// const cookieParser = require("cookie-parser");
+const cors = require("cors");
+// const { cloudinaryConnect } = require("./config/cloudinary");
+// const fileUpload = require("express-fileupload");
+const dotenv = require("dotenv");
+
+dotenv.config();
+const PORT = process.env.PORT || 4000;
+
+//database connect
+database.connect();
+//middlewares
 app.use(express.json());
-
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+// app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:4000",
+    credentials: true,
   })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB", err));
+);
 
-// Routes (to be added later)
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: "/tmp",
+//   })
+// );
+//cloudinary connection
+// cloudinaryConnect();
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+//routes
+// app.use("/api/v1/auth", userRoutes);
+// app.use("/api/v1/profile", profileRoutes);
+// app.use("/api/v1/course", courseRoutes);
+// app.use("/api/v1/payment", paymentRoutes);
+// app.use("/api/v1/reach", contactUsRoute);
 
-module.exports = app;
+//def route
+
+app.get("/", (req, res) => {
+  return res.json({
+    success: true,
+    message: "Your server is up and running....",
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`App is running at ${PORT}`);
+});
