@@ -1,6 +1,6 @@
-const cloudinary = require("cloudinary").v2; //! Cloudinary is being required
+const cloudinary = require("cloudinary").v2; // Import Cloudinary
 
-exports.cloudinaryConnect = () => {
+const cloudinaryConnect = () => {
   try {
     cloudinary.config({
       //!    ########   Configuring the Cloudinary to Upload MEDIA ########
@@ -8,7 +8,10 @@ exports.cloudinaryConnect = () => {
       api_key: process.env.API_KEY,
       api_secret: process.env.API_SECRET,
     });
+    console.log("Cloudinary connected successfully."); // Confirmation message
   } catch (error) {
-    console.log(error);
+    console.error("Error connecting to Cloudinary:", error.message);
   }
 };
+
+module.exports = { cloudinary, cloudinaryConnect }; // Export both

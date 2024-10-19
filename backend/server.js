@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cloudinary = require("./config/cloudinary"); // Import Cloudinary configuration
 
 // Importing routes
 const candidateRoutes = require("./routes/candidateDashboard"); // Candidate-related routes
@@ -19,7 +20,14 @@ const PORT = process.env.PORT || 4000;
 // Database connection
 database.connect();
 
+cloudinary.cloudinaryConnect();
+
 // Middleware
+const cookieParser = require("cookie-parser");
+
+// Middleware
+app.use(cookieParser());
+
 app.use(express.json());
 app.use(
   cors({
