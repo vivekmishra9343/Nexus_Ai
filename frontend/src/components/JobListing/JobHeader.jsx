@@ -1,9 +1,12 @@
+import { CiBookmark } from "react-icons/ci";
+import { FaChevronRight } from "react-icons/fa6";
+import instagramLogo from "../../assets/images/instagramLogo.png";
+
 const JobHeader = ({ title, company, website, phone, email, expiryDate }) => (
   <div className='flex justify-between items-center p-8'>
     <div className='flex items-center'>
       <img
-        src='/path-to-company-logo.png'
-        alt={company}
+        src={instagramLogo}
         className='w-[60px] h-[45px] rounded-full mr-4'
       />
       <div>
@@ -32,19 +35,11 @@ const JobHeader = ({ title, company, website, phone, email, expiryDate }) => (
       </p>
       <div className='flex items-center mt-4'>
         <button className='bg-[#e7f0fa] p-4 rounded mr-4'>
-          <img
-            src='/path-to-bookmark-icon.png'
-            alt='Bookmark'
-            className='w-6 h-6'
-          />
+          <CiBookmark className=' text-3xl' />
         </button>
         <button className='bg-[#0a65cc] text-white px-8 py-4 rounded flex items-center'>
           Apply now
-          <img
-            src='/path-to-arrow-icon.png'
-            alt='Arrow'
-            className='w-6 h-6 ml-2'
-          />
+          <FaChevronRight size={20} />
         </button>
       </div>
     </div>
