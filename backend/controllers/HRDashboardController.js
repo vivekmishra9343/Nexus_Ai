@@ -1,10 +1,53 @@
 const mongoose = require("mongoose");
 const Candidate = require("../models/Candidate");
 const User = require("../models/User");
+const axios = require('axios');
+const fs = require('fs');
+const FormData = require('form-data'); // Correct form-data package
+
+
+const fetchCandidateInfo = async () => {
+  try {
+    // Create FormData and append the PDF file
+    const form = new FormData();
+    form.append('pdf', fs.createReadStream('./data/resumea.pdf'));
+
+    // Send PDF file to the Flask API using axios
+    const response = await axios.post('http://127.0.0.1:5000/candidate_info', form, {
+      headers: {
+        ...form.getHeaders(), // This gets the correct multipart/form-data headers
+      },
+    });
+
+    // Check if Flask API response is successful
+    if (response.status === 200) {
+      return {
+        success: true,
+        candidateInfo: response.data, // The candidate info returned from the API
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Failed to fetch candidate information from Flask API',
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching candidate information from Flask API:', error.message);
+    return {
+      success: false,
+      message: 'An error occurred while fetching candidate information.',
+    };
+  }
+};
+
 
 // Get dashboard statistics
 const getDashboardStats = async () => {
   try {
+
+     // Fetch candidate info and questions (as needed)
+     const fetchedCandidateInfo = await fetchCandidateInfo();
+
     // Get count of candidates with pending interviews
     const interviewCount = await Candidate.countDocuments({
       "jobApplications.status": "in_progress",
@@ -15,11 +58,15 @@ const getDashboardStats = async () => {
       resume: { $exists: true, $ne: null },
     });
 
+    const candidateInfo = fetchedCandidateInfo.success ? fetchedCandidateInfo.candidateInfo : null;
+
+
     return {
       success: true,
       data: {
         interviewScheduled: interviewCount,
         resumeSubmitted: resumeCount,
+        candidateInfo: candidateInfo || 'Candidate info not available',
       },
     };
   } catch (error) {

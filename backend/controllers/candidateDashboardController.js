@@ -3,6 +3,37 @@ const Candidate = require("../models/Candidate");
 const Interview = require("../models/Interview");
 const Application = require("../models/Application");
 const Notification = require("../models/Notification");
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+
+
+const checkEligibility = async (jobTitle, resumePath) => {
+  try {
+    // Prepare the form data
+    const form = new FormData();
+    form.append('pdf', fs.createReadStream("./data/resumea.pdf")); // Attach the PDF file
+    form.append('job_criteria', jobTitle); // Add the job title as job criteria
+
+    // Send the POST request to the Flask API
+    const response = await axios.post('http://127.0.0.1:5000/eligibility', form, {
+      headers: form.getHeaders(),
+    });
+
+    // Return the eligibility status
+    if (response.data && response.data.eligibility) {
+      return response.data.eligibility === '1' || response.data.eligibility.toLowerCase() === 'yes'
+        ? 'Eligible'
+        : 'Not Eligible';
+    } else {
+      return 'Eligibility Check Failed';
+    }
+  } catch (error) {
+    console.error('Error checking eligibility:', error.message);
+    return 'Eligibility Check Failed';
+  }
+};
+
 
 exports.getDashboardData = async (req, res) => {
   try {
@@ -33,15 +64,26 @@ exports.getDashboardData = async (req, res) => {
       scheduledDate: { $gte: new Date() },
     }).sort({ scheduledDate: 1 });
 
-    const applications = candidate.jobApplications
-      .map((app) => ({
-        courseName: app.job.title,
-        instructor: app.job.company,
-        appliedOn: app.appliedOn,
-        status: app.status,
-        interviewProgress: app.interviewProgress,
-      }))
-      .sort((a, b) => b.appliedOn - a.appliedOn);
+    const fetchApplicationsWithEligibility = async (candidate, resumePath) => {
+      // Use Promise.all to check eligibility for each job application in parallel
+      const applications = await Promise.all(
+        candidate.jobApplications.map(async (app) => {
+          // Check eligibility for the specific job title
+          const eligibilityStatus = await checkEligibility(app.job.title, resumePath);
+    
+          return {
+            courseName: app.job.title,
+            instructor: app.job.company,
+            appliedOn: app.appliedOn,
+            status: eligibilityStatus, // Update status with eligibility
+            interviewProgress: app.interviewProgress,
+          };
+        })
+      );
+    
+      // Sort applications by `appliedOn` date, descending
+      return applications.sort((a, b) => new Date(b.appliedOn) - new Date(a.appliedOn));
+    };
 
     const reminders = [];
     if (applicationStatus.inProgressInterview) {
@@ -59,7 +101,7 @@ exports.getDashboardData = async (req, res) => {
         avatar: candidate.user.avatar,
       },
       applicationStatus,
-      applications,
+      fetchApplicationsWithEligibility,
       reminders,
       upcomingInterview,
     });

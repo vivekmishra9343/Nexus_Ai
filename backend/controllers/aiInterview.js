@@ -1,9 +1,18 @@
 // controllers/interviewController.js
-
+const express = require('express');
+const axios = require('axios');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 const cloudinary = require("../config/cloudinary"); // Import Cloudinary configuration
+const FormData = require('form-data'); // Correct form-data package
 
 // In-memory store for interview sessions (replace with a database in production)
 const interviewSessions = new Map();
+
+
+
+
 
 // Sample demo questions (to be replaced with ML-generated questions)
 const demoQuestions = [
@@ -14,29 +23,69 @@ const demoQuestions = [
   "Describe a project you're particularly proud of and your role in it.",
 ];
 
+const fetchQuestions = async () => {
+  try {
+    // Create FormData and append the PDF file
+    const form = new FormData();
+    form.append('pdf', fs.createReadStream('./data/resumea.pdf'));
+
+    // Send PDF file to the Flask API
+    const response = await axios.post('http://127.0.0.1:5000/questions', form, {
+      headers: {
+        ...form.getHeaders(), // Set the correct headers for multipart form-data
+      },
+    });
+ // Check if Flask API response is successful
+ if (response.status === 200) {
+  return {
+    success: true,
+    questions: response.data.questions,
+  };
+} else {
+  return {
+    success: false,
+    message: 'Failed to fetch questions from Flask API',
+  };
+}
+} catch (error) {
+console.error('Error fetching questions from Flask API:', error.message);
+return {
+  success: false,
+  message: 'An error occurred while fetching questions.',
+};
+}
+};
+
+
 // Function to start an interview
-exports.startInterview = (req, res) => {
+exports.startInterview = async (req, res) => {
   const sessionId = Date.now(); // Use timestamp as a simple session ID
-  interviewSessions.set(sessionId, {
-    currentQuestionIndex: 0,
-    answers: [],
-    startTime: Date.now(),
-    // Automatically generate questions using a ML model here
-    // questions: await mlModel.generateQuestions(), // ML model to generate questions
-    questions: demoQuestions, // For now, use demo questions
-  });
+  const interviewSessions = new Map();
 
-  // Start the video recording and real-time speech-to-text conversion
-  // This would typically be handled by the front-end, sending data to the backend
-  // Start recording video and send to backend automatically
-  // const videoStream = startVideoRecording(); // Placeholder for video recording logic
-  // startSpeechToText(sessionId); // Placeholder for speech-to-text logic
+  // Await the fetched questions from the Flask API
+  const fetchedQuestions = await fetchQuestions();
 
-  res.json({
-    sessionId,
-    question: demoQuestions[0], // Send the first demo question
-    totalQuestions: demoQuestions.length,
-  });
+  // If questions are successfully fetched, start the interview
+  if (fetchedQuestions.success) {
+    interviewSessions.set(sessionId, {
+      currentQuestionIndex: 0,
+      answers: [],
+      startTime: Date.now(),
+      questions: fetchedQuestions.questions, // Use the fetched questions
+    });
+    res.json({
+      success: true,
+      sessionId,
+      message: 'Interview started successfully',
+      questions: fetchedQuestions.questions,
+    });
+  } else {
+    // Handle the error case where questions could not be fetched
+    res.status(500).json({
+      success: false,
+      message: fetchedQuestions.message,
+    });
+  }
 };
 
 // Function to submit an answer (automatically called by the recording system)
