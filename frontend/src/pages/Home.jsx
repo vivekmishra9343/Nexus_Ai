@@ -7,7 +7,7 @@ import CallToAction from "../components/home/CallToAction";
 
 const Home = () => {
   return (
-    <div className='Home2  w-full h-[1024px] relative bg-[#fbfaf4]'>
+    <div className='Home2 w-full h-screen relative bg-[#fbfaf4]'>
       <BackgroundElements />
       <CircleImage />
       <Navbar />
