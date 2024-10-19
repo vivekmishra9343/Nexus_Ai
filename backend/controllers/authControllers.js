@@ -1,6 +1,7 @@
+// controllers/auth.js
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const User = require("../models/User");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
@@ -114,11 +115,9 @@ exports.forgotPassword = async (req, res) => {
 
     res.json({ message: "Password reset email sent" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error in forgot password process",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error in forgot password process",
+      error: error.message,
+    });
   }
 };
