@@ -1,4 +1,4 @@
-# Project Title
+# NEXUS_AI
 
 This project aims to build a revolutionize hiring process with integrating AL. The solution leverages an LLM (Large Language Model) integrated with the backend for tasks such as resume parsing, generating interview questions and assesing candidate with his skillset through virtual AI interview. However, due to certain limitations, the frontend could not be fully integrated with the backend.
 
