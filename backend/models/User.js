@@ -5,12 +5,12 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isCandidate: { type: Boolean, default: false },
-  isHR: { type: Boolean, default: false },
+  // isCandidate: { type: Boolean, default: false },
+  // isHR: { type: Boolean, default: false },
   // Common fields that can be added later
   // firstName: String,
   // lastName: String,
-  // email: { type: String, unique: true },
+  email: { type: String, unique: true },
   // mobileNo: String,
   // gender: { type: String, enum: ['Male', 'Female', 'Other'] },
   // address: String,

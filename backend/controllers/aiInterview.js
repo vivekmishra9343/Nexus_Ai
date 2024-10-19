@@ -1,14 +1,7 @@
 // controllers/interviewController.js
 
 const { v4: uuidv4 } = require("uuid");
-const cloudinary = require("cloudinary").v2;
-
-// Cloudinary configuration
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET
-// });
+const cloudinary = require("../config/cloudinary"); // Import Cloudinary configuration
 
 // In-memory store for interview sessions (replace with a database in production)
 const interviewSessions = new Map();
@@ -58,6 +51,7 @@ exports.submitAnswer = (req, res) => {
   } else {
     res.json({
       message: "Interview completed",
+      answers: session.answers, // You may want to return all answers
     });
   }
 };

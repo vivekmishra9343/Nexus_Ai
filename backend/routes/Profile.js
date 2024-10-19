@@ -11,7 +11,7 @@ const {
 // Define routes
 router.post("/signup", signup);
 router.post("/login", login);
-router.post("/logout", logout);
-router.post("/forgot-password", forgotPassword);
+// router.post("/logout", logout);
+// router.post("/forgot-password", forgotPassword);
 
 module.exports = router;
