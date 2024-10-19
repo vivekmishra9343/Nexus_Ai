@@ -5,16 +5,15 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  // isCandidate: { type: Boolean, default: false },
-  // isHR: { type: Boolean, default: false },
+
   // Common fields that can be added later
-  // firstName: String,
-  // lastName: String,
-  email: { type: String, unique: true },
-  // mobileNo: String,
-  // gender: { type: String, enum: ['Male', 'Female', 'Other'] },
-  // address: String,
+  firstName: { type: String, default: null },
+  lastName: { type: String, default: null },
+  email: { type: String, unique: true, default: null },
+  mobileNo: { type: String, default: null },
+  gender: { type: String, enum: ["Male", "Female", "Other"], default: null },
+  address: { type: String, default: null },
 });
 
-// export model
+// Export model
 module.exports = mongoose.model("User", userSchema);

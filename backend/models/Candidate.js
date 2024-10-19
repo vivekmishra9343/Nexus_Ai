@@ -6,7 +6,8 @@ const User = require("./User");
 
 const candidateSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    // Use the user ID as the candidate ID directly
+    _id: { type: Schema.Types.ObjectId, ref: "User", required: true },
     resume: { type: String }, // Store the file path or URL for the resume
     jobApplications: [
       {

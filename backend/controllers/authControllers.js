@@ -59,11 +59,12 @@ exports.signup = async (req, res) => {
 };
 
 // Login Controller
+// Login Controller
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Find user
+    // Find the user by username
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -75,14 +76,30 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Create JWT
+    // Create JWT token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "7d", // Token expires in 7 days
     });
 
-    res.json({
-      token,
+    // Set the token and user details in an HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true, // Prevents JavaScript access to the token
+      secure: process.env.NODE_ENV === "production", // Use secure flag in production
+      sameSite: "strict", // Helps prevent CSRF attacks
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days
+    });
+
+    // Optionally, you can set user details in another cookie (non-HttpOnly)
+    res.cookie("userId", user._id, {
+      httpOnly: false, // Allow access to this cookie via JavaScript if needed
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days
+    });
+
+    // Send response with user details
+    res.status(200).json({
+      message: "Login successful",
       userId: user._id,
+      username: user.username,
       isCandidate: user.isCandidate,
       isHR: user.isHR,
     });

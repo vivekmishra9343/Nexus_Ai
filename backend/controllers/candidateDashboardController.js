@@ -134,39 +134,39 @@ exports.handleInterviewAction = async (req, res) => {
   }
 };
 
-exports.updateInterviewProgress = async (req, res) => {
-  try {
-    const { applicationId, progress } = req.body;
-    const userId = req.user.id;
+// exports.updateInterviewProgress = async (req, res) => {
+//   try {
+//     const { applicationId, progress } = req.body;
+//     const userId = req.user.id;
 
-    const candidate = await Candidate.findOneAndUpdate(
-      {
-        user: userId,
-        "jobApplications._id": applicationId,
-      },
-      {
-        $set: {
-          "jobApplications.$.interviewProgress": progress,
-          "jobApplications.$.status":
-            progress === 100 ? "completed" : "in_progress",
-        },
-      },
-      { new: true }
-    );
+//     const candidate = await Candidate.findOneAndUpdate(
+//       {
+//         user: userId,
+//         "jobApplications._id": applicationId,
+//       },
+//       {
+//         $set: {
+//           "jobApplications.$.interviewProgress": progress,
+//           "jobApplications.$.status":
+//             progress === 100 ? "completed" : "in_progress",
+//         },
+//       },
+//       { new: true }
+//     );
 
-    if (!candidate) {
-      return res.status(404).json({ error: "Application not found" });
-    }
+//     if (!candidate) {
+//       return res.status(404).json({ error: "Application not found" });
+//     }
 
-    res.json({
-      progress,
-      status: progress === 100 ? "completed" : "in_progress",
-    });
-  } catch (error) {
-    console.error("Error in updateInterviewProgress:", error);
-    res.status(500).json({ error: "Failed to update interview progress" });
-  }
-};
+//     res.json({
+//       progress,
+//       status: progress === 100 ? "completed" : "in_progress",
+//     });
+//   } catch (error) {
+//     console.error("Error in updateInterviewProgress:", error);
+//     res.status(500).json({ error: "Failed to update interview progress" });
+//   }
+// };
 
 exports.getApplicationHistory = async (req, res) => {
   try {

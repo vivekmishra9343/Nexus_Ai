@@ -3,12 +3,12 @@ const User = require("../models/User"); // Assuming you have a User model
 // Update user details
 exports.updateUserDetails = async (req, res) => {
   try {
-    const { id, firstName, lastName, email, mobileNo, gender, address } =
-      req.body; // Get ID from body
+    const userId = req.cookies.userId; // Get ID from cookie
+    const { firstName, lastName, email, mobileNo, gender, address } = req.body; // Get other details from body
 
     // Find the user by ID and update
     const updatedUser = await User.findByIdAndUpdate(
-      id,
+      userId,
       {
         firstName,
         lastName,

@@ -24,16 +24,16 @@ const candidateDashboardController = {
     }
   },
 
-  updateInterviewProgress: async (req, res) => {
-    try {
-      const { applicationId, progress } = req.body;
-      const userId = req.user.id;
-      // Implementation here
-    } catch (error) {
-      console.error("Error in updateInterviewProgress:", error);
-      res.status(500).json({ error: "Failed to update interview progress." });
-    }
-  },
+  // updateInterviewProgress: async (req, res) => {
+  //   try {
+  //     const { applicationId, progress } = req.body;
+  //     const userId = req.user.id;
+
+  //   } catch (error) {
+  //     console.error("Error in updateInterviewProgress:", error);
+  //     res.status(500).json({ error: "Failed to update interview progress." });
+  //   }
+  // },
 
   getApplicationHistory: async (req, res) => {
     try {
