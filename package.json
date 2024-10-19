@@ -1,0 +1,20 @@
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "description": "A project combining frontend and backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently --names \"SERVER,CLIENT\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev", 
+    "client": "cd frontend && vite",
+    "build": "cd frontend && vite build",
+    "lint": "cd frontend && eslint .",
+    "preview": "cd frontend && vite preview"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20"
+  },
+  "author": "Your Name",
+  "license": "ISC"
+}

@@ -1,62 +1,33 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import InputField from "../login/InputField";
+import { apiRequest } from "../../../../api";
 
 const SignUpForm = () => {
-  // State to hold form input values
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Function to handle form submission
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-
-    // Basic client-side validation
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    if (!agreeToTerms) {
-      setError("You must agree to the terms.");
-      return;
-    }
+    e.preventDefault();
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/v1/profile/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Signup failed. Please try again.");
-      }
-
-      const data = await response.json();
-      setSuccess(
-        "Signup successful! Please check your email for verification."
-      );
-      setError(""); // Clear any previous error messages
-
-      // Reset form fields after successful signup
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setAgreeToTerms(false);
-    } catch (err) {
-      setError(err.message);
+      const data = await apiRequest("/api/auth/signup", "POST", formData);
+      setSuccess(data.message);
+      // Optionally, clear the form and redirect
+    } catch (error) {
+      console.error("Signup error:", error);
+      setError(error.message || "An error occurred. Please try again.");
     }
   };
 
@@ -65,63 +36,58 @@ const SignUpForm = () => {
       <h2 className='text-3xl font-medium text-center mb-8'>
         Create an account
       </h2>
+      {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
+      {success && <p className='text-green-500 text-sm mb-4'>{success}</p>}
       <form onSubmit={handleSubmit}>
+        <InputField
+          label='Username'
+          type='text'
+          name='username'
+          placeholder='Enter your username'
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
         <InputField
           label='Email'
           type='email'
+          name='email'
           placeholder='Enter your email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
+          required
         />
         <InputField
           label='Password'
           type='password'
+          name='password'
           placeholder='Create a password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleChange}
+          required
         />
         <InputField
           label='Confirm Password'
           type='password'
+          name='confirmPassword'
           placeholder='Confirm your password'
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
         />
-        <div className='mb-4'>
-          <label className='flex items-center'>
-            <input
-              type='checkbox'
-              className='mr-2'
-              checked={agreeToTerms}
-              onChange={() => setAgreeToTerms(!agreeToTerms)}
-            />
-            <span className='text-sm text-gray-600'>
-              I agree to the Terms of Service and Privacy Policy
-            </span>
-          </label>
-        </div>
-        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
-        {success && (
-          <p className='text-green-500 text-sm text-center'>{success}</p>
-        )}
         <button
           type='submit'
-          className='w-full bg-black text-white py-3 rounded-full mb-4'
+          className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300'
         >
           Sign Up
         </button>
-        <p className='text-sm text-center'>
-          By signing up, you agree to our{" "}
-          <a href='#' className='underline'>
-            Terms of use
-          </a>{" "}
-          and{" "}
-          <a href='#' className='underline'>
-            Privacy Policy
-          </a>
-          .
-        </p>
       </form>
+      <p className='mt-4 text-center text-sm text-gray-600'>
+        Already have an account?{" "}
+        <a href='/login' className='text-blue-600 hover:underline'>
+          Log in
+        </a>
+      </p>
     </div>
   );
 };
