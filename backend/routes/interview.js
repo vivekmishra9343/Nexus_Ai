@@ -1,27 +1,20 @@
 const express = require("express");
-const {
-  startInterview,
-  submitAnswer,
-  getInterviewStatus,
-  endInterview,
-  uploadVideoChunk,
-} = require("../controllers/aiInterview"); // Adjust the path as necessary
-
 const router = express.Router();
+const interviewController = require("../controllers/aiInterview");
 
-// Route to start a new interview session
-router.post("/start", startInterview);
+// Route to start an interview
+router.post("/start", interviewController.startInterview);
 
-// Route to submit an answer to a question
-router.post("/submit-answer", submitAnswer);
+// Route to submit an answer (automatically called by the recording system)
+router.post("/submit-answer", interviewController.submitAnswer);
 
-// Route to get the current status of an interview session
-router.get("/status/:sessionId", getInterviewStatus);
+// Route to end an interview
+router.post("/end", interviewController.endInterview);
 
-// Route to end an interview session
-router.post("/end", endInterview);
+// Route to upload video (auto-upload handled by recording system)
+router.post("/upload-video", interviewController.uploadVideo);
 
-// Route to upload a video chunk
-router.post("/upload-chunk", uploadVideoChunk);
+// Route to handle real-time speech-to-text (receiving transcribed text)
+router.post("/speech-to-text", interviewController.handleSpeechToText);
 
 module.exports = router;
