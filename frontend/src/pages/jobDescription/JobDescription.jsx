@@ -1,9 +1,9 @@
-import Header from "../components/JobListing/Header";
-import Breadcrumb from "../components/JobListing/BreadCrumb";
-import JobDescription from "../components/JobListing/JobDescription";
-import JobHeader from "../components/JobListing/JobHeader";
-import Responsibilities from "../components/JobListing/Responsibilites";
-import ShareJob from "../components/JobListing/ShareJob";
+import Header from "../../components/JobListing/Header";
+import Breadcrumb from "../../components/JobListing/BreadCrumb";
+import JobDescription from "../../components/JobListing/JobDescription";
+import JobHeader from "../../components/JobListing/JobHeader";
+import Responsibilities from "../../components/JobListing/Responsibilites";
+import ShareJob from "../../components/JobListing/ShareJob";
 
 const JobListing = () => {
   const jobDetails = {

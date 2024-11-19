@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "../components/login/Header";
-import Logo from "../components/login/Logo";
-import SignInForm from "../components/login/SignInForm";
-import Divider from "../components/login/Divider";
-import CreateaccountButton from "../components/login/CreateaccountButton";
-import Footer from "../components/login/Footer";
+import Header from "../../components/login/Header";
+import Logo from "../../components/login/Logo";
+import SignInForm from "../../components/login/SignInForm";
+import Divider from "../../components/login/Divider";
+import CreateaccountButton from "../../components/login/CreateaccountButton";
+import Footer from "../../components/login/Footer";
 
 const Login = () => {
   return (

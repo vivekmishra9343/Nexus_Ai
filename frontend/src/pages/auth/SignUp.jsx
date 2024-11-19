@@ -1,10 +1,10 @@
 import React from "react";
-import Logo from "../components/signup/Logo";
-import Header from "../components/signup/header";
-import SignUpForm from "../components/signup/SignUpForm";
-import Divider from "../components/signup/Divider";
-import SignInButton from "../components/signup/SignInButton";
-import Footer from "../components/signup/Footer";
+import Logo from "../../components/signup/Logo";
+import Header from "../../components/signup/header";
+import SignUpForm from "../../components/signup/SignUpForm";
+import Divider from "../../components/signup/Divider";
+import SignInButton from "../../components/signup/SignInButton";
+import Footer from "../../components/signup/Footer";
 
 const SignUp = () => {
   return (

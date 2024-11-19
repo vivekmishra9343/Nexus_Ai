@@ -1,7 +1,7 @@
 import React from "react";
-import Sidebar from "../components/profile/Sidebar";
-import Logo from "../components/profile/Logo";
-import ProfileContent from "../components/profile/ProfileContent";
+import Sidebar from "../../components/profile/Sidebar";
+import Logo from "../../components/profile/Logo";
+import ProfileContent from "../../components/profile/ProfileContent";
 
 const Profile = () => {
   return (

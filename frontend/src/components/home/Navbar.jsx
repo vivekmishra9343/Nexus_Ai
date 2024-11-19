@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"; // Import Link for navigation
 const Navbar = ({ userType }) => {
   // userType could be 'recruiter' or 'candidate'
   return (
-    <div className='Group157 w-[1358px] h-[58.13px] left-[60px] top-[29px] absolute'>
+    <div className='Group157 w-[1358px] h-[58.13px] left-[60px]  absolute'>
       <div className='Rectangle2 w-[152px] h-14 left-[1031px] top-[1px] absolute bg-[#15191f] rounded-[20px] border-2 border-[#c4fdff]' />
       <Link to='/job-listing'>
         <div className="JobListing w-[119px] h-[30px] left-[1053px] top-[16px] absolute text-white text-2xl font-normal font-['Lato']">
