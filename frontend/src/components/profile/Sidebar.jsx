@@ -1,45 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  FaHome,
+  FaUser,
+  FaQuestionCircle,
+  FaComments,
+  FaSignOutAlt,
+  FaChartBar,
+} from "react-icons/fa";
+
+const MenuItem = ({ icon: Icon, text, isActive, onClick, to }) => (
+  <Link to={to}>
+    <motion.div
+      className={`flex items-center p-3 mb-4 rounded-lg cursor-pointer transition-all
+        ${isActive ? "bg-[#3c652f] text-white" : "hover:bg-gray-100"}`}
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Icon className='w-6 h-6 mr-4' />
+      <span className="font-['Poppins'] font-medium">{text}</span>
+    </motion.div>
+  </Link>
+);
 
 const Sidebar = () => {
+  const [activeItem, setActiveItem] = useState("Overview");
+
+  const menuItems = [
+    { icon: FaHome, text: "Overview", to: "/" },
+    { icon: FaUser, text: "Update Profile", to: "/profile" },
+    { icon: FaQuestionCircle, text: "Help & Support", to: "/support" },
+    { icon: FaComments, text: "View Feedback", to: "/feedback" },
+  ];
+
   return (
-    <div className='Group167 w-[167.03px] h-[706px] left-[30.97px] top-[240px] absolute'>
-      {/* Calendar Edit Icon */}
-      <div className='CalendarEdit w-6 h-[24.35px] left-0 top-[83.79px] absolute'>
-        <div className='Group w-[6.82px] h-[6.92px] left-[15.16px] top-[15.42px] absolute'></div>
+    <motion.div
+      className='w-[250px] h-[706px] p-6 bg-white rounded-2xl shadow-lg fixed left-8 top-[240px]'
+      initial={{ x: -300 }}
+      animate={{ x: 0 }}
+      transition={{ type: "spring", stiffness: 100 }}
+    >
+      <div className='space-y-6'>
+        {menuItems.map((item) => (
+          <MenuItem
+            key={item.text}
+            icon={item.icon}
+            text={item.text}
+            isActive={activeItem === item.text}
+            onClick={() => setActiveItem(item.text)}
+            to={item.to}
+          />
+        ))}
       </div>
-      {/* Folder Icon */}
-      <div className='VuesaxLinearFolder2 w-6 h-6 left-[0.03px] top-[158px] absolute justify-center items-center inline-flex'>
-        <div className='Folder2 w-6 h-6 relative'></div>
-      </div>
-      {/* Menu Items */}
-      <div className="Overview left-[46.03px] top-0 absolute text-[#121212] text-base font-medium font-['Poppins']">
-        Overview{" "}
-      </div>
-      <div className="UpdateProfile left-[46.03px] top-[86px] absolute text-[#3c652f] text-base font-medium font-['Poppins']">
-        Update Profile
-      </div>
-      <div className="HelpSupport left-[46.03px] top-[158px] absolute text-black text-base font-medium font-['Poppins']">
-        Help & Support
-      </div>
-      <div className="ViewFeedback left-[46.03px] top-[237px] absolute text-black text-base font-medium font-['Poppins']">
-        view Feedback
-      </div>
-      {/* Chart Icon */}
-      <div className='VuesaxLinearChart w-6 h-6 left-[0.03px] top-[237px] absolute justify-center items-center inline-flex'>
-        <div className='Chart w-6 h-6 relative'></div>
-      </div>
-      {/* Login Icon */}
-      <div className='VuesaxLinearLogin w-[31px] h-[31px] left-[0.03px] top-[675px] absolute justify-center items-center inline-flex'>
-        <div className='Login w-[31px] h-[31px] relative'></div>
-      </div>
-      <div className="LogOut left-[46.03px] top-[677px] absolute text-black text-base font-medium font-['Poppins']">
-        Log out{" "}
-      </div>
-      {/* Element Icon */}
-      <div className='VuesaxBoldElement3 w-6 h-6 left-[0.03px] top-0 absolute justify-center items-center inline-flex'>
-        <div className='Element3 w-6 h-6 relative'></div>
-      </div>
-    </div>
+
+      {/* Logout Section */}
+      <motion.div
+        className='absolute bottom-8 w-full left-0 px-6'
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Link to='/logout'>
+          <div className='flex items-center p-3 text-red-500 hover:bg-red-50 rounded-lg cursor-pointer transition-all'>
+            <FaSignOutAlt className='w-6 h-6 mr-4' />
+            <span className="font-['Poppins'] font-medium">Log out</span>
+          </div>
+        </Link>
+      </motion.div>
+    </motion.div>
   );
 };
 
